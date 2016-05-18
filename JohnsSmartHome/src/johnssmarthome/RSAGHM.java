@@ -6,6 +6,7 @@
 package johnssmarthome;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 /**
@@ -46,12 +47,19 @@ public class RSAGHM {
         }
     }
     
-    public String encrypt(String message) {
-        return null;
+    public BigInteger encrypt(String message) {
+        byte messageBytes[] = message.getBytes();
+        BigInteger messageEncrypted = new BigInteger(messageBytes).modPow(e, n);
+        return messageEncrypted;
+        //return (new String(messageEncrypted.toByteArray(), StandardCharsets.UTF_8));
+        //System.out.println(new String(messageBigIntegers.toByteArray(),StandardCharsets.UTF_8));
     }
     
-    public String decrypt(String ciphertext) {
-        return null;
+    public String decrypt(BigInteger ciphertext) {
+        //byte messageBytes[] = ciphertext.getBytes();
+        //BigInteger messagePlain = new BigInteger(messageBytes).modPow(d, n);
+        //return (new String(messagePlain.toByteArray(), StandardCharsets.UTF_8));
+        return new String(ciphertext.modPow(d, n).toByteArray(), StandardCharsets.UTF_8);
     }
     
 }
