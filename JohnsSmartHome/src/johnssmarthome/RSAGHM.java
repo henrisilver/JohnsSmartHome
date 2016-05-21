@@ -37,6 +37,14 @@ public class RSAGHM {
         d = e.modInverse(z);
     }
     
+    public void setPrivateKey(BigInteger e) {
+        this.e = e;
+    }
+
+    public void setPublicKey(BigInteger d) {
+        this.d = d;
+    }
+    
     private void getCoprime(BigInteger n, BigInteger z) {
         e = n.subtract(BigInteger.ONE);
         
