@@ -7,10 +7,15 @@ package johnssmarthome.view;
 
 import java.awt.Desktop;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -22,11 +27,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import johnssmarthome.JohnsSmartHome;
+import johnssmarthome.RSAGHM;
 
 /**
  * FXML Controller class
@@ -36,7 +41,8 @@ import johnssmarthome.JohnsSmartHome;
 public class EncryptDecryptController implements Initializable {
 
     private FileChooser fileChooser;
-    private Desktop desktop = Desktop.getDesktop();
+    private final Desktop desktop;
+    private RSAGHM rsaghm;
     
     @FXML
     private TextArea message;
@@ -46,6 +52,10 @@ public class EncryptDecryptController implements Initializable {
     
     @FXML
     private TextArea result;
+
+    public EncryptDecryptController() {
+        this.desktop = Desktop.getDesktop();
+    }
     
     /**
      * Initializes the controller class.
@@ -56,6 +66,7 @@ public class EncryptDecryptController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         fileChooser = new FileChooser();
+        rsaghm = new RSAGHM();
     }    
     
     @FXML
@@ -82,13 +93,7 @@ public class EncryptDecryptController implements Initializable {
     }
     
     @FXML
-    public void teste (Event event){
-    
-        result.setText("Pepperoni");
-    }
-    
-    @FXML
-    public void openMessageFileOnClick(Event event){
+    public void openMessageFile(Event event){
         Scene currentScene = ((Node) event.getSource()).getScene();
         Stage currentStage = (Stage) currentScene.getWindow();
         
@@ -108,12 +113,17 @@ public class EncryptDecryptController implements Initializable {
     
     @FXML
     public void encrypt(Event event){
-        System.out.println("Criptografar");
+        result.setText(rsaghm.encrypt(message.getText()).toString());
+        //result.setText(message.getText());
     }
     
     @FXML
     public void decrypt(Event event){
-        System.out.println("Descriptografar");
+        result.setText(rsaghm.decrypt(
+                new BigInteger(
+                        message.getText().substring(0, message.getText().length()-1))
+            )
+        );
     }
     
     private void openFile(File file, TextArea path, TextArea contentHolder) {
@@ -134,5 +144,37 @@ public class EncryptDecryptController implements Initializable {
                 Level.SEVERE, null, ex
             );
         }
+    }
+    
+    @FXML
+    private void saveFile(Event event){
+        System.out.println("saveFile");
+        
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("result.txt", "UTF-8");
+            writer.println(result.getText());
+            writer.close();
+        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+            Logger.getLogger(EncryptDecryptController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (writer != null){
+                writer.close();
+            }
+        }
+        /*
+        File file = new File("result.txt");
+        // if file doesnt exists, then create it
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(result.getText());
+                bw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(EncryptDecryptController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+	}*/
     }
 }
