@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * John's Smart Home
+ * Autores:
+ * Giuliano Barbosa Prado
+ * Henrique de Almeida Machado da Silveira
+ * Marcello de Paula Ferreira Costa
  */
 package johnssmarthome;
 
@@ -11,20 +13,15 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-/**
- *
- * @author henrisilver
- */
+// Classe principal
 public class JohnsSmartHome extends Application {
+    
+    // Abaixo, criação e inicialização da janela de JavaFX
     public static ResourceBundle BUNDLE = ResourceBundle.getBundle("johnssmarthome.bundle",
             Locale.forLanguageTag("pt"));
     private Stage primaryStage;
@@ -46,7 +43,7 @@ public class JohnsSmartHome extends Application {
         AnchorPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("view/Welcome.fxml"),
+                    getClass().getResource("view/EncryptDecryptView.fxml"),
                     JohnsSmartHome.BUNDLE);
             
             root.setId("AnchorPane");
@@ -61,7 +58,7 @@ public class JohnsSmartHome extends Application {
     }
 
     /**
-     * @param args the command line arguments
+     * @param args Argumentos da linha de comando
      */
     public static void main(String[] args) {
         launch(args);

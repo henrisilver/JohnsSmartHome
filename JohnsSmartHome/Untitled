@@ -1,0 +1,65 @@
+ant -f "/Users/henrisilver/Documents/USP/7º Semestre/Engenharia de Segurança/Trabalho 1/JohnsSmartHome/JohnsSmartHome" jfxsa-run
+init:
+Deleting: /Users/henrisilver/Documents/USP/7º Semestre/Engenharia de Segurança/Trabalho 1/JohnsSmartHome/JohnsSmartHome/build/built-jar.properties
+deps-jar:
+Updating property file: /Users/henrisilver/Documents/USP/7º Semestre/Engenharia de Segurança/Trabalho 1/JohnsSmartHome/JohnsSmartHome/build/built-jar.properties
+Compiling 1 source file to /Users/henrisilver/Documents/USP/7º Semestre/Engenharia de Segurança/Trabalho 1/JohnsSmartHome/JohnsSmartHome/build/classes
+compile:
+Detected JavaFX Ant API version 1.3
+Launching <fx:jar> task from /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/lib/ant-javafx.jar
+Warning: From JDK7u25 the Codebase manifest attribute should be used to restrict JAR repurposing.
+         Please set manifest.custom.codebase property to override the current default non-secure value '*'.
+Launching <fx:deploy> task from /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/lib/ant-javafx.jar
+jfx-deployment-script:
+jfx-deployment:
+jar:
+Copying 12 files to /Users/henrisilver/Documents/USP/7º Semestre/Engenharia de Segurança/Trabalho 1/JohnsSmartHome/JohnsSmartHome/dist/run263369065
+jfx-project-run:
+Executing /Users/henrisilver/Documents/USP/7º Semestre/Engenharia de Segurança/Trabalho 1/JohnsSmartHome/JohnsSmartHome/dist/run263369065/JohnsSmartHome.jar using platform /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/bin/java
+Exception in thread "JavaFX Application Thread" java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1770)
+	at javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1653)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$ClickGenerator.postProcess(Scene.java:3471)
+	at javafx.scene.Scene$ClickGenerator.access$8100(Scene.java:3399)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3767)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3486)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2495)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:350)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:275)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$350(GlassViewEventHandler.java:385)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$$Lambda$186/1931363674.get(Unknown Source)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:404)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:384)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:927)
+Caused by: java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at sun.reflect.misc.Trampoline.invoke(MethodUtil.java:71)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at sun.reflect.misc.MethodUtil.invoke(MethodUtil.java:275)
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1765)
+	... 29 more
+Caused by: java.lang.StringIndexOutOfBoundsException: String index out of range: 616
+	at java.lang.String.charAt(String.java:646)
+	at johnssmarthome.view.EncryptDecryptController.decrypt(EncryptDecryptController.java:101)
+	... 39 more
