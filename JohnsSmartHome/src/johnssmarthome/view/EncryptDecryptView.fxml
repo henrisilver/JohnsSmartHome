@@ -26,7 +26,7 @@
                   <HBox alignment="CENTER" fillHeight="false" spacing="20.0">
                      <children>
                         <Region HBox.hgrow="ALWAYS" />
-                        <TextArea fx:id="path" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" />
+                        <TextArea fx:id="path" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" wrapText="true" />
                         <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#openMessageFile" text="%open_file" textAlignment="CENTER" />
                         <Region HBox.hgrow="ALWAYS" />
                      </children>
@@ -39,13 +39,13 @@
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%loaded" />
-                              <TextArea fx:id="message" />
+                              <TextArea fx:id="message" wrapText="true" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%processed" />
-                              <TextArea fx:id="result" editable="false" />
+                              <TextArea fx:id="result" editable="false" wrapText="true" />
                            </children>
                         </VBox>
                      </children>

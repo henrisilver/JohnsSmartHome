@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -47,6 +50,10 @@ public class EncryptDecryptController implements Initializable {
 
     @FXML
     private TextArea result;
+    
+    private ArrayList<Integer> sizes = new ArrayList<>();
+    
+    private boolean isEncryptedContent = false;
 
     public EncryptDecryptController() {
         this.desktop = Desktop.getDesktop();
@@ -86,15 +93,48 @@ public class EncryptDecryptController implements Initializable {
         );
     }
 
-    // Método utilizado para criptografar o conteúdo de uma mensagem
+    // Método utilizado para criptografar o conteúdo de uma mensagem    
     @FXML
-    public void encrypt(Event event) {
-        try {
-            result.setText(rsaghm.encrypt(message.getText()).toString());
-        } catch(Exception e) {
-            result.setText("Conversão inválida! Insira o texto que deseja criptografar.");
-        }
+    public void encrypt(Event event){
         
+        // It is required to split the input into batches with a maximum
+        // of 128 characters. That's because a BigInteger cannot work
+        // properly with strings bigger than that.
+        String textToEncrypt = message.getText();
+        String temp = null;
+        StringBuilder encryptedStringBuilder = new StringBuilder();
+        int textSize = textToEncrypt.length();
+        int charsProcessedSoFar = 0;
+        int size = 127;
+        sizes.clear();
+        
+        try {
+            while (charsProcessedSoFar != textSize){
+                if (textSize - charsProcessedSoFar < 127){
+                    size = textSize - charsProcessedSoFar;
+                }
+                //System.out.println("Size: " + size);
+                temp = textToEncrypt.substring(charsProcessedSoFar, charsProcessedSoFar + size);
+                //System.out.println(temp);
+                String resultingText = rsaghm.encrypt(temp).toString();
+                sizes.add(resultingText.length());
+                encryptedStringBuilder.append(resultingText);
+                charsProcessedSoFar = charsProcessedSoFar + size;
+            }
+
+            result.setText(encryptedStringBuilder.toString());
+            isEncryptedContent = true;
+        } catch (Exception e){
+            result.setText("Conversão inválida! Insira o texto que deseja criptografar.");
+            Alert alert = new Alert(AlertType.ERROR);
+            StringBuilder contentText = new StringBuilder();
+            contentText.append("Algo errado ocorreu. Se o problema persistir, reinicie a aplicação\n");
+            alert.setTitle("Atenção");
+            alert.setHeaderText(null);
+            alert.setContentText(contentText.toString());
+
+            alert.showAndWait();
+        }
     }
 
     // Método utilizado para realizar a descriptografia.
@@ -103,11 +143,41 @@ public class EncryptDecryptController implements Initializable {
     // ao usuário
     @FXML
     public void decrypt(Event event) {
+        
+        // It is required to split the input into batches with a maximum
+        // of 128 characters. That's because a BigInteger cannot work
+        // properly with strings bigger than that.
+        String textToDecrypt = message.getText();
+        String tempString = null;
+        BigInteger tempBigInteger = null;
+        StringBuilder encryptedStringBuilder = new StringBuilder();
+        int charsProcessedSoFar = 0;
+        
         try {
-            BigInteger bi = new BigInteger(message.getText());
-            result.setText(rsaghm.decrypt(bi));
-        } catch(Exception e) {
-            result.setText("Conversão inválida! O texto que deseja descriptografar deve ser um número.");
+            if (sizes.isEmpty()){
+                throw new Exception();
+            }
+            for (Integer size : sizes){
+                    tempString = textToDecrypt
+                            .substring(charsProcessedSoFar,charsProcessedSoFar+size);
+                    tempBigInteger = new BigInteger(tempString);
+                    encryptedStringBuilder.append(rsaghm.decrypt(tempBigInteger));
+                    charsProcessedSoFar = charsProcessedSoFar + size;
+                }
+            result.setText(encryptedStringBuilder.toString());
+            isEncryptedContent = false;
+        } catch(Exception e){
+            Alert alert = new Alert(AlertType.ERROR);
+            StringBuilder contentText = new StringBuilder();
+            
+            contentText.append("Ooops, parece que o conteúdo não é um formato conhecido!\n");
+            contentText.append("O formato esperado é uma cadeia de números.\n");
+            contentText.append("Não deve conter nenhum outro tipo de caracter");
+            alert.setTitle("Atenção");
+            alert.setHeaderText(null);
+            alert.setContentText(contentText.toString());
+
+            alert.showAndWait();
         }
     }
 
@@ -116,17 +186,57 @@ public class EncryptDecryptController implements Initializable {
     private void openFile(File file, TextArea path, TextArea contentHolder) {
         try {
             if (file.canRead()) {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-                StringBuilder content = new StringBuilder();
-                int c;
-                
-                // Lê o arquivo, caractere por caractere
-                while ((c = reader.read()) != -1) {
-                    
-                    content.append((char) c);
+                String extension = file.getName();
+                extension = extension.substring(extension.length()-4,extension.length());
+                if (extension.equals(".enc")){
+                    // If the file has a encrypted content, it is required
+                    // to parse accordingly. It has a big integer followed
+                    // by its string size
+                    //
+                    // BIGINTEGERSTRING|BIGINTEGERSTRINGSIZE|
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    StringBuilder content = new StringBuilder();
+                    StringBuilder contentSize;
+                    int c;
+
+                    // Lê o arquivo, caractere por caractere
+                    while ((c = reader.read()) != -1) {
+                        char ch = (char) c;
+                        
+                        if (ch == '|') {
+                            contentSize = new StringBuilder();
+                            c = reader.read();
+                            ch = (char) c;
+                            while(ch != '|'){
+                                contentSize.append(ch);
+                                c = reader.read();
+                                ch = (char) c;
+                            }
+                            sizes.add(Integer.parseInt(contentSize.toString()));
+                            contentSize = null;
+                            c = reader.read(); // Moves file pointer
+                            ch = (char) c;
+                        }
+                        
+                        if (c != -1){
+                            content.append(ch);
+                        }
+                    }
+                    path.setText(file.getAbsolutePath());
+                    contentHolder.setText(content.toString());
+                } else {
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    StringBuilder content = new StringBuilder();
+                    int c;
+
+                    // Lê o arquivo, caractere por caractere
+                    while ((c = reader.read()) != -1) {
+
+                        content.append((char) c);
+                    }
+                    path.setText(file.getAbsolutePath());
+                    contentHolder.setText(content.toString());
                 }
-                path.setText(file.getAbsolutePath());
-                contentHolder.setText(content.toString());
 
             }
         } catch (IOException ex) {
@@ -140,13 +250,39 @@ public class EncryptDecryptController implements Initializable {
     // criptografia/descriptografia em um arquivo
     @FXML
     private void saveFile(Event event) {
-        System.out.println("saveFile");
-
         PrintWriter writer = null;
-        try {
-            writer = new PrintWriter("result.txt", "UTF-8");
-            writer.print(result.getText());
+        File file;
+        StringBuilder contentText = new StringBuilder();
+        Alert alert = new Alert(AlertType.INFORMATION);
+        try { 
+            if(isEncryptedContent){
+                writer = new PrintWriter("result.enc", "UTF-8");
+                int offset = 0;
+                String text = result.getText();
+                
+                for (Integer i : sizes){
+                    writer.print(text.substring(offset, offset + i));
+                    writer.print("|" + i + "|");
+                    offset = offset + i;
+                }
+                sizes.clear();
+
+                contentText.append("O conteúdo foi salvo para o arquivo 'result.enc'!\n");
+                file = new File("result.enc");
+            } else {
+                writer = new PrintWriter("result.dec", "UTF-8");
+                writer.print(result.getText());
+                
+                contentText.append("O conteúdo foi salvo para o arquivo 'result.dec'!\n");
+                file = new File("result.dec");
+            }
             writer.close();
+            
+            contentText.append("\nLocal: ").append(file.getAbsolutePath());
+            alert.setTitle("Atenção");
+            alert.setHeaderText(null);
+            alert.setContentText(contentText.toString());
+            alert.showAndWait();
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             Logger.getLogger(EncryptDecryptController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
