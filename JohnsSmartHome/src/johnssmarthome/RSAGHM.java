@@ -47,7 +47,7 @@ public class RSAGHM {
         // entre -128 e 127 (gama de valores que o tipo byte, em Java, pode
         // utilizar). Assim, há 256 possibilidades para a variavel cesarCode.
         do {
-            cesarCode = randomGenerator.nextInt();
+            cesarCode = randomGenerator.nextInt()%64;
         } while(cesarCode < -63 || cesarCode > 63);
         
         // A seguir, inicia-se a definição das chaves do RSA, caso não sejam
