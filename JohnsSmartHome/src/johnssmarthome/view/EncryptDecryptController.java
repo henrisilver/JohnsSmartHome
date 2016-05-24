@@ -148,8 +148,8 @@ public class EncryptDecryptController implements Initializable {
         // of 128 characters. That's because a BigInteger cannot work
         // properly with strings bigger than that.
         String textToDecrypt = message.getText();
-        String tempString = null;
-        BigInteger tempBigInteger = null;
+        String tempString;
+        BigInteger tempBigInteger;
         StringBuilder encryptedStringBuilder = new StringBuilder();
         int charsProcessedSoFar = 0;
         
@@ -202,7 +202,6 @@ public class EncryptDecryptController implements Initializable {
                     // Lê o arquivo, caractere por caractere
                     while ((c = reader.read()) != -1) {
                         char ch = (char) c;
-                        
                         if (ch == '|') {
                             contentSize = new StringBuilder();
                             c = reader.read();
@@ -213,7 +212,6 @@ public class EncryptDecryptController implements Initializable {
                                 ch = (char) c;
                             }
                             sizes.add(Integer.parseInt(contentSize.toString()));
-                            contentSize = null;
                             c = reader.read(); // Moves file pointer
                             ch = (char) c;
                         }

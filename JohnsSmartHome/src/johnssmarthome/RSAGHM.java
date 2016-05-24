@@ -48,7 +48,7 @@ public class RSAGHM {
         // utilizar). Assim, há 256 possibilidades para a variavel cesarCode.
         do {
             cesarCode = randomGenerator.nextInt();
-        } while(cesarCode < -128 || cesarCode > 127);
+        } while(cesarCode < -63 || cesarCode > 63);
         
         // A seguir, inicia-se a definição das chaves do RSA, caso não sejam
         // fornecidas pelo usuário. Os valores p e q são escolhidos aleatoriamente,
@@ -196,6 +196,7 @@ public class RSAGHM {
      *         
      */
     public BigInteger encrypt(String message) {
+        message = "@" + message;
         // Transforma a mensagem em um array de bytes
         byte messageBytes[] = message.getBytes();
         // Aplica o código de Cesar
@@ -232,7 +233,7 @@ public class RSAGHM {
         for (int i=0;i<messageBytes.length;i++) {
             // Valor do deslocamento é calculado, utilizando uma variável
             // inteira para evitar overflow
-            int shift = modulo(messageBytes[i]+256-cesarCode);
+            int shift = modulo(messageBytes[i]-cesarCode);
             // Com a utilização do método "modulo", definido abaixo, temos
             // certeza de que o valor do inteiro está entre -128 e 127,
             // valores admitidos por um byte. Assim, realizamos um
@@ -240,7 +241,7 @@ public class RSAGHM {
             messageBytes[i] = (byte) shift;
         }
         // Retorna o resultado plano como String
-        return new String(messageBytes, StandardCharsets.UTF_8);
+        return new String(messageBytes, StandardCharsets.UTF_8).substring(1);
     }
     
     // Implementação personalizada da operação "modulo", devido a números
